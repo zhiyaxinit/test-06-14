@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			#miaov {
+				width: 200px;
+				height: 300px;
+				background: red;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+			.add {
+				width: 200px;
+				height: 200px;
+				background: yellow;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+		</style>
+		<script>
+			
+		</script>
+	</head>
+
+	<body>
+		<div id="miaov"></div>
+		<script>
+			miaov.onmousedown  =function (e){
+				var disX = e.clientX - miaov.offsetLeft;	
+				var disY = e.clientY - miaov.offsetTop;
+				var downDisX = e.clientX;
+				var downDisY = e.clientY;
+				/*var newDiv = document.createElement('div');
+				newDiv.classList.add('add')
+				newDiv.style.left = miaov.offsetLeft + 'px';
+				newDiv.style.top = miaov.offsetTop + 'px';
+				document.body.appendChild(newDiv);*/
+				//newDiv.innerText = '选中了n条'
+				var newDiv = null;
+				document.onmousemove = function (e){
+
+					// 判断10个像素
+					if((Math.abs(e.clientX - downDisX) > 10 || Math.abs(e.clientY - downDisY) > 10) && !newDiv){
+						newDiv = document.createElement('div');
+						newDiv.classList.add('add')
+						newDiv.style.left = miaov.offsetLeft + 'px';
+						newDiv.style.top = miaov.offsetTop + 'px';
+						document.body.appendChild(newDiv);
+							
+					}
+
+					if(newDiv){
+						newDiv.style.left = e.clientX - disX + 'px';	
+						newDiv.style.top = e.clientY - disY + 'px';
+					}
+
+					
+				}
+				document.onmouseup = function (e){
+					document.onmousemove = document.onmouseup = null;
+					if(newDiv){
+						miaov.style.left = newDiv.offsetLeft + 'px';
+						miaov.style.top = newDiv.offsetTop + 'px';
+						newDiv.remove();
+					}
+				}	
+			}		
+		</script>
+	</body>
+</html>
