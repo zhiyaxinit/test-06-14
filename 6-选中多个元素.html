@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			.hit {
+				width: 200px;
+				height: 200px;
+				background: red;
+				float: left;
+				margin: 30px;
+			}
+			.miaov {
+				width: 0px;
+				height: 0px;
+				border: 1px dashed #000;
+				background: yellow;
+				opacity: .5;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+		</style>
+		<script>
+			
+		</script>
+	</head>
+
+	<body>
+		<div class="hit"></div>
+		<div class="hit"></div>
+		<div class="hit"></div>
+		<div class="hit"></div>
+		<div class="hit"></div>
+		<div class="hit"></div>
+		<script>
+			var hits = document.querySelectorAll('.hit')
+
+			// 1. 先画方块
+
+			document.onmousedown = function (e){
+				var newDiv = document.createElement('div');
+				newDiv.classList.add('miaov');
+				document.body.appendChild(newDiv);
+
+				// down下去鼠标的位置
+				var downDisX = e.clientX;
+				var downDisY = e.clientY;
+
+				newDiv.style.left = downDisX + 'px';
+				newDiv.style.top = downDisY + 'px';
+
+				document.onmousemove = function (e){
+					newDiv.style.width = Math.abs(e.clientX - downDisX)	+ 'px';
+					newDiv.style.height = Math.abs(e.clientY - downDisY)	+ 'px';
+					newDiv.style.left = Math.min(e.clientX,downDisX)	+ 'px';
+					newDiv.style.top =Math.min(e.clientY , downDisY)	+ 'px';
+
+					// 要和所有的div进行检测
+					for( var i = 0; i < hits.length; i++ ){
+						if(collision(newDiv,hits[i])){
+							hits[i].style.background = 'blue'
+						}else{
+							hits[i].style.background = 'red'
+						}
+					}
+				}
+
+				document.onmouseup = function (e){
+					document.onmousemove = document.onmouseup = null;
+					newDiv.remove();
+				}
+
+				e.preventDefault();
+
+			}
+
+
+
+
+			function getRect(el){
+				return el.getBoundingClientRect();
+			}
+			function collision(dragEl,hitedEl){
+				var dragRect = getRect(dragEl);
+				var hitedRect = getRect(hitedEl); 
+
+				if(
+					dragRect.right < hitedRect.left || 
+					dragRect.bottom < hitedRect.top ||
+					dragRect.left > hitedRect.right ||
+					dragRect.top > hitedRect.bottom
+				){
+					return false
+				}
+
+				return true
+			}
+
+		</script>
+	</body>
+</html>
